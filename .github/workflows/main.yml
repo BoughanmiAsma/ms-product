@@ -1,0 +1,102 @@
+name: Build & Push Docker Images
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  DOCKERHUB_USERNAME: ${{ secrets.boughanmiasma }}
+  DOCKERHUB_TOKEN: ${{ secrets.dckr_pat_DvcH451HjiIoGv5xSY0ZchOD8JA }}
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ env.boughanmiasma }}
+          password: ${{ env.dckr_pat_DvcH451HjiIoGv5xSY0ZchOD8JA }}
+
+      # -----------------------------------
+      # Build & Push product-service
+      # -----------------------------------
+      - name: Build & Push product-service
+        uses: docker/build-push-action@v4
+        with:
+          context: ./product-service
+          file: ./product-service/Dockerfile
+          push: true
+          tags: boughanmiasma/product-service:latest
+
+      # -----------------------------------
+      # Build & Push order-service
+      # -----------------------------------
+      - name: Build & Push order-service
+        uses: docker/build-push-action@v4
+        with:
+          context: ./order-service
+          file: ./order-service/Dockerfile
+          push: true
+          tags: boughanmiasma/order-service:latest
+
+      # -----------------------------------
+      # Build & Push inventory-service
+      # -----------------------------------
+      - name: Build & Push inventory-service
+        uses: docker/build-push-action@v4
+        with:
+          context: ./inventory-service
+          file: ./inventory-service/Dockerfile
+          push: true
+          tags: boughanmiasma/inventory-service:latest
+
+      # -----------------------------------
+      # Build & Push api-gateway
+      # -----------------------------------
+      - name: Build & Push api-gateway
+        uses: docker/build-push-action@v4
+        with:
+          context: ./api-gateway
+          file: ./api-gateway/Dockerfile
+          push: true
+          tags: boughanmiasma/api-gateway:latest
+
+      # -----------------------------------
+      # Build & Push discovery-service
+      # -----------------------------------
+      - name: Build & Push discovery-service
+        uses: docker/build-push-action@v4
+        with:
+          context: ./discovery-service
+          file: ./discovery-service/Dockerfile
+          push: true
+          tags: boughanmiasma/discovery-service:latest
+
+      # -----------------------------------
+      # Build & Push notification-service
+      # -----------------------------------
+      - name: Build & Push notification-service
+        uses: docker/build-push-action@v4
+        with:
+          context: ./notification-service
+          file: ./notification-service/Dockerfile
+          push: true
+          tags: boughanmiasma/notification-service:latest
+
+      # -----------------------------------
+      # Build & Push frontend
+      # -----------------------------------
+      - name: Build & Push frontend
+        uses: docker/build-push-action@v4
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          push: true
+          tags: boughanmiasma/frontend:latest
